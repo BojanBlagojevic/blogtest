@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="MvcBlogModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="MvcBlogModelStoreContainer">
+          <EntitySet Name="Blogs" EntityType="MvcBlogModel.Store.Blogs" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Categories" EntityType="MvcBlogModel.Store.Categories" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CategoriesBlog" EntityType="MvcBlogModel.Store.CategoriesBlog" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_CategoriesBlog_Blogs" Association="MvcBlogModel.Store.FK_CategoriesBlog_Blogs">
+            <End Role="Blogs" EntitySet="Blogs" />
+            <End Role="CategoriesBlog" EntitySet="CategoriesBlog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CategoriesBlog_Categories" Association="MvcBlogModel.Store.FK_CategoriesBlog_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="CategoriesBlog" EntitySet="CategoriesBlog" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Blogs">
+          <Key>
+            <PropertyRef Name="BlogId" />
+          </Key>
+          <Property Name="BlogId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="Content" Type="ntext" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Categories">
+          <Key>
+            <PropertyRef Name="Categoryid" />
+          </Key>
+          <Property Name="Categoryid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Description" Type="ntext" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CategoriesBlog">
+          <Key>
+            <PropertyRef Name="Blogid" />
+            <PropertyRef Name="Categoryid" />
+          </Key>
+          <Property Name="Blogid" Type="int" Nullable="false" />
+          <Property Name="Categoryid" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_CategoriesBlog_Blogs">
+          <End Role="Blogs" Type="MvcBlogModel.Store.Blogs" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CategoriesBlog" Type="MvcBlogModel.Store.CategoriesBlog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Blogs">
+              <PropertyRef Name="BlogId" />
+            </Principal>
+            <Dependent Role="CategoriesBlog">
+              <PropertyRef Name="Blogid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CategoriesBlog_Categories">
+          <End Role="Categories" Type="MvcBlogModel.Store.Categories" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CategoriesBlog" Type="MvcBlogModel.Store.CategoriesBlog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="Categoryid" />
+            </Principal>
+            <Dependent Role="CategoriesBlog">
+              <PropertyRef Name="Categoryid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MvcBlogModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="MvcBlogEntities4" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Blogs" EntityType="MvcBlogModel.Blog" />
+          <EntitySet Name="Categories" EntityType="MvcBlogModel.Category" />
+          <AssociationSet Name="CategoriesBlog" Association="MvcBlogModel.CategoriesBlog">
+            <End Role="Blogs" EntitySet="Blogs" />
+            <End Role="Categories" EntitySet="Categories" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Blog">
+          <Key>
+            <PropertyRef Name="BlogId" />
+          </Key>
+          <Property Name="BlogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Categories" Relationship="MvcBlogModel.CategoriesBlog" FromRole="Blogs" ToRole="Categories" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Categoryid" />
+          </Key>
+          <Property Name="Categoryid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Blogs" Relationship="MvcBlogModel.CategoriesBlog" FromRole="Categories" ToRole="Blogs" />
+        </EntityType>
+        <Association Name="CategoriesBlog">
+          <End Role="Blogs" Type="MvcBlogModel.Blog" Multiplicity="*" />
+          <End Role="Categories" Type="MvcBlogModel.Category" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MvcBlogModelStoreContainer" CdmEntityContainer="MvcBlogEntities4">
+          <EntitySetMapping Name="Blogs">
+            <EntityTypeMapping TypeName="MvcBlogModel.Blog">
+              <MappingFragment StoreEntitySet="Blogs">
+                <ScalarProperty Name="BlogId" ColumnName="BlogId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="MvcBlogModel.Category">
+              <MappingFragment StoreEntitySet="Categories">
+                <ScalarProperty Name="Categoryid" ColumnName="Categoryid" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="CategoriesBlog" TypeName="MvcBlogModel.CategoriesBlog" StoreEntitySet="CategoriesBlog">
+            <EndProperty Name="Blogs">
+              <ScalarProperty Name="BlogId" ColumnName="Blogid" />
+            </EndProperty>
+            <EndProperty Name="Categories">
+              <ScalarProperty Name="Categoryid" ColumnName="Categoryid" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

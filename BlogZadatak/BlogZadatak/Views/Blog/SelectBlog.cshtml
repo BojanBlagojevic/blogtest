@@ -1,0 +1,41 @@
+﻿@model IEnumerable<BlogZadatak.Models.Blog>
+
+@{
+    ViewBag.Title = "SelectBlog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Svi blogovi</h2>
+
+
+<table  style="border-color:black">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Content)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Content)
+        </td>
+       
+    </tr>
+}
+
+</table>
+<div>
+    @Html.ActionLink("Create new Blog", "Create")
+</div>
+
+<div>
+    <td>@Html.ActionLink("Back to categories", "Index","Category", new { id = "Index" },null)</td>
+</div>
